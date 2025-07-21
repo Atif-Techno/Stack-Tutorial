@@ -1,0 +1,46 @@
+﻿@model (IEnumerable<StackTutorial.Models.CategoryModel> Categories, IEnumerable<StackTutorial.Models.TopicModel> Topics, IEnumerable<StackTutorial.Models.ContentModel> Contents)
+@{
+    ViewData["Title"] = "Search Results";
+}
+
+<h1>Search Results for "@ViewBag.SearchTerm"</h1>
+
+@if (!Model.Categories.Any() && !Model.Topics.Any() && !Model.Contents.Any())
+{
+    <p>No results found.</p>
+}
+else
+{
+    @if (Model.Categories.Any())
+    {
+        <h2>Categories</h2>
+        <ul>
+            @foreach (var category in Model.Categories)
+            {
+                <li><a asp-controller="Tutorial" asp-action="Category" asp-route-id="@category.CategoryID">@category.Name</a></li>
+            }
+        </ul>
+    }
+
+    @if (Model.Topics.Any())
+    {
+        <h2>Topics</h2>
+        <ul>
+            @foreach (var topic in Model.Topics)
+            {
+                <li><a asp-controller="Tutorial" asp-action="Topic" asp-route-id="@topic.TopicID">@topic.Title</a> (in @topic.Category.Name)</li>
+            }
+        </ul>
+    }
+
+    @if (Model.Contents.Any())
+    {
+        <h2>Contents</h2>
+        <ul>
+            @foreach (var content in Model.Contents)
+            {
+                <li><a asp-controller="Tutorial" asp-action="Content" asp-route-id="@content.ContentID">@content.Title</a> (in @content.Topic.Title)</li>
+            }
+        </ul>
+    }
+}

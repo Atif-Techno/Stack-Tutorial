@@ -1,0 +1,669 @@
+﻿@model IEnumerable<StackTutorial.Models.CategoryModel>
+@inject StackTutorial.Services.Interfaces.ICategoryService _categoryService
+@{
+    ViewData["Title"] = "Home Page";
+    var contentCounts = ViewBag.ContentCounts as Dictionary<long, int> ?? new Dictionary<long, int>();
+}
+
+<div class="hero-section text-center py-5 mb-5">
+    <div class="container">
+        <h1 class="hero-title">Welcome to StackTutorial</h1>
+        <p class="hero-subtitle">Master programming with our comprehensive tutorials</p>
+        <div class="mt-4">
+            <div class="glass-search-container">
+                <form class="glass-search-form">
+                    <input type="text" class="glass-search-input" placeholder="Search tutorials...">
+                    <button class="glass-search-button">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <h2 class="text-center mb-4 section-title">Browse Categories</h2>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info text-center">
+            <i class="fas fa-info-circle me-2"></i> No categories available yet. Please check back later.
+        </div>
+    }
+    else
+    {
+        <div class="row g-4">
+            @foreach (var category in Model)
+            {
+                <div class="col-xl-4 col-lg-6 col-md-6">
+                    <div class="card h-100 category-card">
+                        <div class="card-body d-flex flex-column">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="category-icon me-3">
+                                    @* <i class="fas @GetCategoryIcon(category.Name)"></i> *@
+                                    <div class="emoji-icon">@GetCategoryIcon(category.Name)</div>
+                                </div>
+                                <h3 class="card-title mb-0">@category.Name</h3>
+                            </div>
+                            <p class="card-text flex-grow-1 text-muted">@category.Description</p>
+                            <div class="d-flex justify-content-between align-items-center mt-3">
+                                <a asp-action="Explore" asp-route-id="@category.CategoryID" class="explore-button">
+                                    <div class="explore-content">
+                                        <div class="pencil"></div>
+                                        <div class="folder">
+                                            <div class="top">
+                                                <svg viewBox="0 0 24 27">
+                                                    <path d="M1,0 L23,0 C23.5522847,-1.01453063e-16 24,0.44771525 24,1 L24,8.17157288 C24,8.70200585 23.7892863,9.21071368 23.4142136,9.58578644 L20.5857864,12.4142136 C20.2107137,12.7892863 20,13.2979941 20,13.8284271 L20,26 C20,26.5522847 19.5522847,27 19,27 L1,27 C0.44771525,27 6.76353751e-17,26.5522847 0,26 L0,1 C-6.76353751e-17,0.44771525 0.44771525,1.01453063e-16 1,0 Z"></path>
+                                                </svg>
+                                            </div>
+                                            <div class="paper"></div>
+                                        </div>
+                                    </div>
+                                    Explore Topics
+                                </a>
+                                <small class="text-muted">
+                                    <i class="fas fa-book me-1"></i> @contentCounts.GetValueOrDefault(category.CategoryID, 0) topics
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+<div class="container mt-5">
+    <div class="row g-4">
+        <div class="col-lg-6 col-md-12">
+            <div class="feature-box popular-tutorials">
+                <h3><i class="fas fa-fire me-2"></i> Popular Tutorials</h3>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <a href="#" class="text-decoration-none d-flex align-items-center">
+                            <span class="bullet bg-danger"></span>
+                            <span class="ms-3">Getting Started with ASP.NET Core</span>
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="#" class="text-decoration-none d-flex align-items-center">
+                            <span class="bullet bg-warning"></span>
+                            <span class="ms-3">JavaScript ES6 Features</span>
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="#" class="text-decoration-none d-flex align-items-center">
+                            <span class="bullet bg-info"></span>
+                            <span class="ms-3">Entity Framework Basics</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-12">
+            <div class="feature-box recent-tutorials">
+                <h3><i class="fas fa-clock me-2"></i> Recently Added</h3>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <a href="#" class="text-decoration-none d-flex align-items-center">
+                            <span class="bullet bg-success"></span>
+                            <span class="ms-3">Blazor WebAssembly Guide</span>
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="#" class="text-decoration-none d-flex align-items-center">
+                            <span class="bullet bg-primary"></span>
+                            <span class="ms-3">TypeScript Advanced Patterns</span>
+                        </a>
+                    </li>
+                    <li class="list-group-item">
+                        <a href="#" class="text-decoration-none d-flex align-items-center">
+                            <span class="bullet bg-teal"></span>
+                            <span class="ms-3">MongoDB with .NET</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+@functions {
+    string GetCategoryIcon(string categoryName)
+    {
+        if (string.IsNullOrWhiteSpace(categoryName))
+            return "📁"; // Default icon
+
+        var name = categoryName.ToLowerInvariant();
+
+        // Programming Languages
+        if (name.Contains("c#")) return "💻";
+        if (name.Contains("javascript")) return "📜";
+        if (name.Contains("typescript")) return "💠";
+        if (name.Contains("python")) return "🐍";
+        if (name.Contains("java")) return "☕";
+
+        // .NET & Backend
+        if (name.Contains("asp.net core identity")) return "🛡️";
+        if (name.Contains("asp.net core web api")) return "🔗";
+        if (name.Contains("asp.net core mvc")) return "⚙️";
+        if (name.Contains("asp.net mvc")) return "📊";
+        if (name.Contains("asp.net core")) return "🌐";
+        if (name.Contains("asp.net")) return "🧭";
+        if (name.Contains(".net core")) return "🖥️";
+        if (name.Contains(".net")) return "🧮";
+        if (name.Contains("web api")) return "🔌";
+        if (name.Contains("blazor")) return "⚡";
+        if (name.Contains("entity framework")) return "🗃️";
+        if (name.Contains("linq")) return "➰";
+        if (name.Contains("ado.net core")) return "🔗";
+        if (name.Contains("ado.net")) return "🔌";
+
+        // Databases
+        if (name.Contains("sql server")) return "🗄️";
+        if (name.Contains("mysql")) return "🐬";
+        if (name.Contains("oracle")) return "🔴";
+        if (name.Contains("mongodb")) return "🍃";
+        if (name.Contains("postgresql")) return "🐘";
+        if (name.Contains("redis")) return "🧠";
+
+        // Frontend Frameworks
+        if (name.Contains("react")) return "⚛️";
+        if (name.Contains("angular")) return "🅰️";
+        if (name.Contains("vue")) return "🟩";
+        if (name.Contains("svelte")) return "🌀";
+        if (name.Contains("jquery")) return "🔧";
+
+        // DevOps / Cloud
+        if (name.Contains("docker")) return "🐳";
+        if (name.Contains("kubernetes")) return "⛵";
+        if (name.Contains("azure")) return "☁️";
+        if (name.Contains("aws")) return "🌩️";
+        if (name.Contains("terraform")) return "🏗️";
+        if (name.Contains("ci/cd")) return "🔄";
+
+        return "📁"; // Default fallback
+    }
+}
+
+
+<style>
+    :root {
+        --primary: #008080; /* Teal */
+        --secondary: #FFA500; /* Orange */
+        --gradient: linear-gradient(45deg, var(--primary), var(--secondary));
+        --teal: #20B2AA;
+        --text-dark: #2F4F4F;
+        --text-light: #778899;
+    }
+
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: var(--text-dark);
+        background-color: #f8f9fa;
+    }
+
+    .emoji-icon {
+        font-size: 1.3rem;
+        margin-right: 0.5rem;
+        display: inline-block;
+    }
+
+    .hero-section {
+        background: linear-gradient(135deg, var(--primary) 0%, #00CED1 100%);
+        margin-top: -1rem;
+        border-radius: 0 0 20px 20px;
+        padding: 3rem 0 4rem !important;
+        box-shadow: 0 10px 30px rgba(0, 128, 128, 0.2);
+    }
+
+    .hero-title {
+        font-size: clamp(1.75rem, 5vw, 2.5rem);
+        font-weight: 700;
+        color: white;
+        margin-bottom: 1rem;
+    }
+
+    .hero-subtitle {
+        font-size: clamp(1rem, 2.5vw, 1.5rem);
+        color: rgba(255, 255, 255, 0.9);
+        margin-bottom: 1.5rem;
+    }
+
+    .glass-search-container {
+        display: flex;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .glass-search-form {
+        display: flex;
+        width: 100%;
+        max-width: 600px;
+        backdrop-filter: blur(10px);
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 50px;
+        padding: 5px;
+        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+        /* Form hover effect */
+        .glass-search-form:hover {
+            background: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 40px rgba(0, 128, 128, 0.2);
+            border: 1px solid rgba(0, 206, 209, 0.5);
+            transform: translateY(-2px);
+        }
+
+        /* Form focus-within effect (when input is focused) */
+        .glass-search-form:focus-within {
+            background: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 8px 40px rgba(0, 128, 128, 0.3);
+            border: 1px solid rgba(0, 206, 209, 0.7);
+        }
+
+    .glass-search-input {
+        flex: 1;
+        border: none;
+        background: transparent;
+        padding: 15px 20px;
+        font-size: 1rem;
+        color: #2F4F4F;
+        outline: none;
+        transition: color 0.3s ease;
+    }
+
+    /* Input placeholder color change on hover */
+    .glass-search-form:hover .glass-search-input::placeholder {
+        color: rgba(0, 128, 128, 0.7);
+    }
+
+    /* Input text color change on hover */
+    .glass-search-form:hover .glass-search-input {
+        color: #008080;
+    }
+
+    .glass-search-button {
+        width: 50px;
+        height: 50px;
+        border: none;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #008080, #00CED1);
+        color: white;
+        cursor: pointer;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+        /* Button hover effects */
+        .glass-search-button:hover {
+            background: linear-gradient(135deg, #00CED1, #008080);
+            transform: scale(1.1) rotate(10deg);
+            box-shadow: 0 5px 15px rgba(0, 128, 128, 0.4);
+        }
+
+        /* Button active (click) effect */
+        .glass-search-button:active {
+            transform: scale(0.95) rotate(5deg);
+        }
+
+        /* Search icon animation */
+        .glass-search-button i {
+            transition: transform 0.3s ease;
+        }
+
+        .glass-search-button:hover i {
+            transform: scale(1.2);
+        }
+
+    .section-title {
+        position: relative;
+        display: inline-block;
+        margin-bottom: 2rem !important;
+        color: var(--text-dark);
+        font-size: clamp(1.5rem, 3vw, 2rem);
+    }
+
+        .section-title:after {
+            content: '';
+            position: absolute;
+            width: 50%;
+            height: 4px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            bottom: -10px;
+            left: 25%;
+            border-radius: 2px;
+        }
+
+    .category-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border: none !important;
+        border-radius: 15px !important;
+        overflow: hidden;
+        background: white;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        margin-bottom: 1.5rem;
+    }
+
+        .category-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+
+    .category-icon {
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(45deg, #E0FFFF, #AFEEEE);
+        border-radius: 12px;
+        color: var(--primary);
+        font-size: 1.25rem;
+    }
+
+    /* Explore Button Styles */
+    .explore-button {
+        display: flex;
+        align-items: center;
+        background: linear-gradient(45deg, var(--primary), var(--secondary));
+        color: white !important;
+        border: none;
+        border-radius: 50px;
+        padding: 8px 20px 8px 55px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        z-index: 1;
+        text-decoration: none;
+        height: 36px;
+        font-size: 0.875rem;
+    }
+
+    .explore-content {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 53px;
+        overflow: hidden;
+        border-radius: 5px 0 0 5px;
+        background: #00808005;
+    }
+
+    .explore-button .folder {
+        width: 23px;
+        height: 27px;
+        position: absolute;
+        left: 15px;
+        top: 4px;
+    }
+
+        .explore-button .folder .top {
+            left: 0;
+            top: 0;
+            z-index: 2;
+            position: absolute;
+            transform: translateX(var(--fx, 0));
+            transition: transform 0.4s ease var(--fd, 0.3s);
+        }
+
+            .explore-button .folder .top svg {
+                width: 24px;
+                height: 27px;
+                display: block;
+                fill: #F3E9CB;
+                transform-origin: 0 50%;
+                transition: transform 0.3s ease var(--fds, 0.45s);
+                transform: perspective(120px) rotateY(var(--fr, 0deg));
+            }
+
+        .explore-button .folder:before,
+        .explore-button .folder:after,
+        .explore-button .folder .paper {
+            content: "";
+            position: absolute;
+            left: var(--l, 0);
+            top: var(--t, 0);
+            width: var(--w, 100%);
+            height: var(--h, 100%);
+            border-radius: 1px;
+            background: var(--b, #BEB393);
+        }
+
+        .explore-button .folder:before {
+            box-shadow: 0 1.5px 3px rgba(13, 15, 25, .2), 0 2.5px 5px rgba(13, 15, 25, .2), 0 3.5px 7px rgba(13, 15, 25, .2);
+            transform: translateX(var(--fx, 0));
+            transition: transform 0.4s ease var(--fd, 0.3s);
+        }
+
+        .explore-button .folder:after,
+        .explore-button .folder .paper {
+            --l: 1px;
+            --t: 1px;
+            --w: 21px;
+            --h: 25px;
+            --b: #E1E6F9;
+        }
+
+        .explore-button .folder:after {
+            transform: translate(var(--pbx, 0), var(--pby, 0));
+            transition: transform 0.4s ease var(--pbd, 0s);
+        }
+
+        .explore-button .folder .paper {
+            z-index: 1;
+            --b: #FFFFFF;
+        }
+
+            .explore-button .folder .paper:before,
+            .explore-button .folder .paper:after {
+                content: "";
+                width: var(--wp, 14px);
+                height: 2px;
+                border-radius: 1px;
+                transform: scaleY(0.5);
+                left: 3px;
+                top: var(--tp, 3px);
+                position: absolute;
+                background: #BBC1E1;
+                box-shadow: 0 12px 0 0 #BBC1E1, 0 24px 0 0 #BBC1E1;
+            }
+
+            .explore-button .folder .paper:after {
+                --tp: 6px;
+                --wp: 10px;
+            }
+
+    .explore-button .pencil {
+        height: 2px;
+        width: 3px;
+        border-radius: 1px 1px 0 0;
+        top: 3px;
+        left: 105%;
+        position: absolute;
+        z-index: 3;
+        transform-origin: 50% 19px;
+        background: #fff;
+        transform: translateX(var(--pex, 0)) rotate(35deg);
+        transition: transform 0.4s ease var(--pbd, 0s);
+    }
+
+        .explore-button .pencil:before,
+        .explore-button .pencil:after {
+            content: "";
+            position: absolute;
+            display: block;
+            background: linear-gradient(#275EFE 55%, #fff 55.1%, #fff 60%, #5C86FF 60.1%);
+            width: 5px;
+            height: 20px;
+            border-radius: 2px 2px 0 0;
+            top: 2px;
+            left: -1px;
+        }
+
+        .explore-button .pencil:before {
+            -webkit-clip-path: polygon(0 5%, 5px 5%, 5px 17px, 50% 20px, 0 17px);
+            clip-path: polygon(0 5%, 5px 5%, 5px 17px, 50% 20px, 0 17px);
+        }
+
+        .explore-button .pencil:after {
+            background: none;
+            width: 3px;
+            height: 6px;
+            border-radius: 0 2px 1px 0;
+            top: 3px;
+            left: 3px;
+            border-top: 1px solid #275EFE;
+            border-right: 1px solid #275EFE;
+        }
+
+    .explore-button:hover {
+        background: linear-gradient(45deg, #006666, #1E90FF);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+        .explore-button:hover .folder .top {
+            --fx: -40px;
+            --fr: -60deg;
+            --fd: .15s;
+            --fds: 0s;
+        }
+
+        .explore-button:hover .folder:after {
+            --pbx: 3px;
+            --pby: -3px;
+            --pbd: .15s;
+        }
+
+        .explore-button:hover .pencil {
+            --pex: -24px;
+            --pbd: .15s;
+        }
+
+    .feature-box {
+        background: white;
+        border-radius: 15px;
+        padding: 1.5rem;
+        height: 100%;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        transition: transform 0.3s ease;
+        margin-bottom: 1.5rem;
+    }
+
+        .feature-box:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-box h3 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+
+            .feature-box h3 i {
+                color: var(--secondary);
+            }
+
+    .popular-tutorials h3 i {
+        color: #FF6347; /* Tomato */
+    }
+
+    .recent-tutorials h3 i {
+        color: #FF8C00; /* Dark orange */
+    }
+
+    .list-group-item {
+        border: none;
+        padding: 12px 0;
+        background: transparent !important;
+    }
+
+        .list-group-item a {
+            color: var(--text-dark);
+            transition: all 0.2s ease;
+            font-size: 0.9375rem;
+        }
+
+            .list-group-item a:hover {
+                color: var(--primary);
+                transform: translateX(5px);
+            }
+
+    .bullet {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+    }
+
+    .bg-teal {
+        background-color: var(--teal);
+    }
+
+    /* Responsive adjustments */
+    @@media (max-width: 992px) {
+        .hero-section
+
+    {
+        padding: 2.5rem 0 3.5rem !important;
+    }
+
+    .category-icon {
+        width: 45px;
+        height: 45px;
+        font-size: 1.1rem;
+    }
+
+    }
+
+    @@media (max-width: 768px) {
+        .hero-section
+
+    {
+        padding: 2rem 0 3rem !important;
+        border-radius: 0 0 15px 15px;
+    }
+
+    .search-box input,
+    .btn-gradient-primary {
+        height: 45px;
+    }
+
+    .explore-button {
+        padding: 6px 15px 6px 45px;
+        height: 32px;
+        font-size: 0.8125rem;
+    }
+
+    }
+
+    @@media (max-width: 576px) {
+        .hero-section
+
+    {
+        padding: 1.5rem 0 2.5rem !important;
+    }
+
+    .search-box {
+        max-width: 100%;
+    }
+
+    .category-card {
+        margin-bottom: 1rem;
+    }
+
+    .feature-box {
+        padding: 1.25rem;
+    }
+
+    }
+</style>

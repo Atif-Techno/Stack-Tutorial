@@ -1,0 +1,88 @@
+﻿@model StackTutorial.Models.CategoryModel
+@{
+    ViewData["Title"] = "Create Category";
+    Layout = "_LayoutAdmin";
+}
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Create Category</h1>
+        <a asp-action="Index" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Back to List
+        </a>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <form asp-action="Create" method="post">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label asp-for="Name" class="form-label"></label>
+                            <input asp-for="Name" class="form-control" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group mb-3">
+                            <label asp-for="Slug" class="form-label"></label>
+                            <div class="input-group">
+                                <input asp-for="Slug" class="form-control" />
+                                <button type="button" class="btn btn-outline-secondary" id="generate-slug">
+                                    <i class="fas fa-sync-alt"></i>
+                                </button>
+                            </div>
+                            <span asp-validation-for="Slug" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="Description" class="form-label"></label>
+                    <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+
+                <div class="form-group mb-3">
+                    <label asp-for="MetaDescription" class="form-label"></label>
+                    <textarea asp-for="MetaDescription" class="form-control" rows="2" maxlength="160"></textarea>
+                    <small class="text-muted">Maximum 160 characters for SEO</small>
+                    <span asp-validation-for="MetaDescription" class="text-danger"></span>
+                </div>
+
+                <div class="form-group form-check mb-3">
+                    <input type="checkbox" class="form-check-input" asp-for="IsActive" checked />
+                    <label class="form-check-label" asp-for="IsActive"></label>
+                </div>
+
+                <div class="d-flex gap-2 mt-4">
+                    <button type="submit" class="btn btn-primary" id="submitButton">
+                        <i class="fas fa-save me-2"></i>Create
+                    </button>
+                    <a asp-action="Index" class="btn btn-outline-secondary">
+                        <i class="fas fa-times me-2"></i>Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        // Auto-generate slug from name
+        document.getElementById('generate-slug').addEventListener('click', function() {
+            const name = document.getElementById('Name').value;
+            const slug = name.toLowerCase()
+                .replace(/[^\w\s-]/g, '') // Remove special chars
+                .replace(/\s+/g, '-')      // Replace spaces with -
+                .replace(/--+/g, '-');     // Replace multiple - with single -
+            document.getElementById('Slug').value = slug;
+        });
+    </script>
+}

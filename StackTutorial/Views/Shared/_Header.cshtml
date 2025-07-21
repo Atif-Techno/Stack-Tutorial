@@ -1,0 +1,179 @@
+﻿<nav class="navbar navbar-expand-lg">
+    <div class="container-fluid">
+        <!-- Your existing brand and toggler -->
+        <a class="navbar-brand" asp-controller="Home" asp-action="Index">
+            <i class="fas fa-graduation-cap me-2"></i>
+            StackTutorial
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="mainNavbar">
+            <!-- Your existing nav items -->
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="dotnetDropdown" role="button" data-bs-toggle="dropdown">
+                        <i class="fab fa-windows me-1"></i> .NET
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#"><i class="fab fa-microsoft me-2"></i>.NET Core</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-globe me-2"></i>ASP.NET Core</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-database me-2"></i>Entity Framework</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="jsDropdown" role="button" data-bs-toggle="dropdown">
+                        <i class="fab fa-js-square me-1"></i> JavaScript
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#"><i class="fab fa-js me-2"></i>JavaScript</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-code me-2"></i>TypeScript</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="fab fa-react me-2"></i>React</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="dbDropdown" role="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-database me-1"></i> Databases
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-server me-2"></i>SQL Server</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-database me-2"></i>MySQL</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-leaf me-2"></i>MongoDB</a></li>
+                    </ul>
+                </li>
+            </ul>
+
+            <!-- Enhanced Search Form -->
+            <form class="d-flex search-form" asp-controller="Search" asp-action="Index" method="get">
+                <div class="search-container">
+                    <input class="search-input"
+                           type="search"
+                           name="query"
+                           placeholder="Find tutorials..."
+                           aria-label="Search"
+                           autocomplete="off">
+                    <button class="search-btn" type="submit">
+                        <div class="search-icon">
+                            <div class="glass"></div>
+                            <div class="handle"></div>
+                        </div>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</nav>
+
+<style>
+    /* Search Bar Styles */
+    .search-container {
+        position: relative;
+        display: flex;
+        align-items: center;
+        margin-left: 1rem;
+    }
+
+    .search-input {
+        width: 220px;
+        padding: 0.75rem 1rem 0.75rem 2.5rem;
+        border: 2px solid var(--primary-light);
+        border-radius: 50px;
+        background-color: var(--primary-light);
+        color: var(--dark);
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(0,128,128,0.1);
+    }
+
+        .search-input:focus {
+            outline: none;
+            width: 280px;
+            border-color: var(--primary);
+            background-color: white;
+            box-shadow: 0 4px 12px rgba(0,128,128,0.15);
+        }
+
+        .search-input::placeholder {
+            color: var(--gray-500);
+        }
+
+    /* Custom Search Icon */
+    .search-btn {
+        position: absolute;
+        left: 12px;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        padding: 0;
+        width: 24px;
+        height: 24px;
+    }
+
+    .search-icon {
+        position: relative;
+        width: 100%;
+        height: 100%;
+    }
+
+    .glass {
+        position: absolute;
+        width: 16px;
+        height: 16px;
+        border: 2px solid var(--primary);
+        border-radius: 50%;
+        top: 0;
+        left: 0;
+        transition: all 0.3s ease;
+    }
+
+    .handle {
+        position: absolute;
+        width: 8px;
+        height: 2px;
+        background-color: var(--primary);
+        transform: rotate(45deg);
+        top: 14px;
+        left: 14px;
+        transition: all 0.3s ease;
+    }
+
+    /* Search button hover animation */
+    .search-btn:hover .glass {
+        border-color: var(--secondary);
+        transform: scale(1.1);
+    }
+
+    .search-btn:hover .handle {
+        background-color: var(--secondary);
+        transform: rotate(45deg) scaleX(1.2);
+    }
+
+    /* Search button click animation */
+    .search-btn:active .glass {
+        transform: scale(0.9);
+    }
+
+    .search-btn:active .handle {
+        transform: rotate(45deg) scaleX(0.8);
+    }
+
+    /* Responsive adjustments */
+    @@media (max-width: 768px) {
+        .search-container
+
+    {
+        margin: 1rem 0 0 0;
+        width: 100%;
+    }
+
+    .search-input {
+        width: 100%;
+    }
+
+        .search-input:focus {
+            width: 100%;
+        }
+
+    }
+</style>

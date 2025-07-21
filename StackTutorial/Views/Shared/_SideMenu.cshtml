@@ -1,0 +1,919 @@
+﻿@using StackTutorial.Models
+@inject StackTutorial.Services.Interfaces.ICategoryService _categoryService
+@inject StackTutorial.Services.Interfaces.ITopicService _topicService
+@inject StackTutorial.Services.Interfaces.IContentService _contentService
+
+@{
+    var currentCategoryId = ViewBag.ActiveCategoryId as long?;
+    var currentCategory = currentCategoryId.HasValue
+        ? await _categoryService.GetCategoryByIdAsync(currentCategoryId.Value)
+        : null;
+}
+
+@if (currentCategory != null)
+{
+    <div class="sidebar-inner">
+        <div class="sidebar-header">
+            <div class="category-title">
+                @* <i class="emoji-icon" @GetCategoryIcon(currentCategory.Name)></i> *@
+                <div class="emoji-icon">@GetCategoryIcon(currentCategory.Name)</div>
+                @currentCategory.Name
+            </div>
+        </div>
+
+        <div class="sidebar-content">
+            @{
+                var topics = await _topicService.GetTopicsByCategoryIdAsync(currentCategory.CategoryID);
+                foreach (var topic in topics.OrderBy(t => t.Order))
+                {
+                    <div class="sidebar-item">
+                        <div class="topic-title @(ViewBag.ActiveTopicId == topic.TopicID ? "active" : "")">
+                            <i class="fas fa-folder me-2"></i>
+                            @topic.Title
+                        </div>
+
+                        <div class="content-list">
+                            @{
+                                var contents = await _contentService.GetContentsByTopicIdAsync(topic.TopicID);
+                                foreach (var content in contents.OrderBy(c => c.Order))
+                                {
+                                    <a asp-controller="Tutorial"
+                                       asp-action="Content"
+                                       asp-route-id="@content.ContentID"
+                                       class="content-item @(ViewBag.ActiveContentId == content.ContentID ? "active" : "")">
+                                        <i class="fas fa-file-alt me-2"></i>
+                                        @content.Title
+                                    </a>
+                                }
+                            }
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+}
+else 
+{
+    <div class="sidebar-inner">
+        <div class="sidebar-header">
+            <div class="category-title">
+                <i class="fas fa-history me-2"></i>
+                The Evolution of Coding
+            </div>
+        </div>
+
+        <div class="sidebar-content">
+            <!-- Ancient Foundations -->
+            <div class="sidebar-item">
+                <div class="topic-title">
+                    <i class="fas fa-hourglass-start me-2"></i>
+                    🌍 Ancient Foundations
+                </div>
+                <div class="content-list">
+                    <div class="content-item">
+                        <i class="fas fa-square-root-alt me-2"></i>
+                        9th Century: Al-Khwarizmi formalized algorithms in mathematics, introducing systematic problem-solving – origin of the term "algorithm".
+                    </div>
+                    <div class="content-item">
+                        <i class="fas fa-cogs me-2"></i>
+                        1843: Ada Lovelace wrote the world's first computer program for Babbage's Analytical Engine, envisioning general-purpose computing.
+                    </div>
+                    <div class="content-item">
+                        <i class="fas fa-punch-card me-2"></i>
+                        1890: Herman Hollerith's punch card system automated US Census data, leading to the formation of IBM and modern data processing.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Computer Age -->
+            <div class="sidebar-item">
+                <div class="topic-title">
+                    <i class="fas fa-computer me-2"></i>
+                    💻 Computer Age (1930s-1950s)
+                </div>
+                <div class="content-list">
+                    <div class="content-item">
+                        <i class="fas fa-server me-2"></i>
+                        1940s: ENIAC and Colossus – first electronic programmable computers, used in WWII for calculations and codebreaking, paving the way for digital computing.
+                    </div>
+                    <div class="content-item">
+                        <i class="fas fa-microchip me-2"></i>
+                        1949: Assembly language introduced mnemonics like ADD and MOV to replace complex binary code, simplifying programming.
+                    </div>
+                    <div class="content-item">
+                        <i class="fas fa-calculator me-2"></i>
+                        1957: FORTRAN released as the first high-level programming language, enabling easier scientific and engineering calculations.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Software Revolution -->
+            <div class="sidebar-item">
+                <div class="topic-title">
+                    <i class="fas fa-laptop-code me-2"></i>
+                    🚀 Software Revolution (1960s-1980s)
+                </div>
+                <div class="content-list">
+                    <div class="content-item">
+                        <i class="fas fa-graduation-cap me-2"></i>
+                        1964: BASIC created at Dartmouth to teach students programming easily, sparking personal computing education.
+                    </div>
+                    <div class="content-item">
+                        <i class="fab fa-cuttlefish me-2"></i>
+                        1972: Dennis Ritchie developed C at Bell Labs, enabling development of Unix, system software, and later influencing C++, Java, and beyond.
+                    </div>
+                    <div class="content-item">
+                        <i class="fas fa-desktop me-2"></i>
+                        1980s: Personal computers like IBM PC and Apple II brought programming into homes and schools worldwide.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Internet Era -->
+            <div class="sidebar-item">
+                <div class="topic-title">
+                    <i class="fas fa-globe me-2"></i>
+                    🌐 Internet Era (1990s-2000s)
+                </div>
+                <div class="content-list">
+                    <div class="content-item">
+                        <i class="fab fa-python me-2"></i>
+                        1991: Python released by Guido van Rossum, designed for readability, rapid development, and clean syntax, powering data science today.
+                    </div>
+                    <div class="content-item">
+                        <i class="fab fa-java me-2"></i>
+                        1995: Java introduced "write once, run anywhere" portability; JavaScript brought dynamic interactivity to websites, shaping the modern web.
+                    </div>
+                    <div class="content-item">
+                        <i class="fab fa-git-alt me-2"></i>
+                        2005: Linus Torvalds created Git for efficient version control, revolutionising software collaboration and open-source projects.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modern AI -->
+            <div class="sidebar-item">
+                <div class="topic-title">
+                    <i class="fas fa-robot me-2"></i>
+                    🤖 AI & Future (2010s-Today)
+                </div>
+                <div class="content-list">
+                    <div class="content-item">
+                        <i class="fab fa-github me-2"></i>
+                        2008: GitHub launched, becoming the world's largest open-source platform, enabling global collaboration and code sharing.
+                    </div>
+                    <div class="content-item">
+                        <i class="fas fa-cloud me-2"></i>
+                        2010s: Cloud platforms like AWS, Azure, and Google Cloud enabled scalable, cost-effective app deployment and services.
+                    </div>
+                    <div class="content-item">
+                        <i class="fas fa-brain me-2"></i>
+                        2020s: AI tools (GitHub Copilot, ChatGPT) assist coding; quantum computing research begins to redefine computational limits.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Key Takeaway -->
+            <div class="sidebar-footer mt-3 p-3 bg-light rounded">
+                <strong>Key Takeaway:</strong>
+                <div class="mt-2">
+                    <i class="fas fa-square-root-alt me-1"></i> Math Algorithms
+                    ➔ <i class="fas fa-punch-card me-1"></i> Mechanical Punch Cards
+                    ➔ <i class="fas fa-desktop me-1"></i> Electronic Computers
+                    ➔ <i class="fas fa-code me-1"></i> High-level Languages
+                    ➔ <i class="fas fa-globe me-1"></i> Internet & Open-source
+                    ➔ <i class="fas fa-robot me-1"></i> AI
+                    ➔ <i class="fas fa-atom me-1"></i> Quantum Computing
+                    <br />
+                    <span class="ms-4">shaping our modern technological world.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+   @*  =================================================================================================== *@
+    @* <div class="sidebar-inner">
+        <div class="sidebar-header">
+            <div class="category-title">
+                <i class="fas fa-history me-2"></i>
+                The Evolution of Coding
+            </div>
+        </div>
+
+        <div class="sidebar-content">
+            <!-- Ancient Foundations -->
+            <div class="sidebar-item">
+                <div class="topic-title">
+                    <i class="fas fa-hourglass-start me-2"></i>
+                    🌍 Ancient Foundations
+                </div>
+                <div class="content-list">
+                    <div class="content-item">
+                        <i class="fas fa-square-root-alt me-2"></i>
+                        9th Century: Al-Khwarizmi formalized algorithms
+                    </div>
+                    <div class="content-item">
+                        <i class="fas fa-cogs me-2"></i>
+                        1843: Ada Lovelace - First programmer
+                    </div>
+                    <div class="content-item">
+                        <i class="fas fa-punch-card me-2"></i>
+                        1890: Hollerith's punch cards → IBM
+                    </div>
+                </div>
+            </div>
+
+            <!-- Computer Age -->
+            <div class="sidebar-item">
+                <div class="topic-title">
+                    <i class="fas fa-computer me-2"></i>
+                    💻 Computer Age (1930s-1950s)
+                </div>
+                <div class="content-list">
+                    <div class="content-item">
+                        <i class="fas fa-server me-2"></i>
+                        1940s: ENIAC programmed by women
+                    </div>
+                    <div class="content-item">
+                        <i class="fas fa-microchip me-2"></i>
+                        1949: Assembly language (ADD, MOV)
+                    </div>
+                    <div class="content-item">
+                        <i class="fas fa-calculator me-2"></i>
+                        1957: FORTRAN - First high-level language
+                    </div>
+                </div>
+            </div>
+
+            <!-- Software Revolution -->
+            <div class="sidebar-item">
+                <div class="topic-title">
+                    <i class="fas fa-laptop-code me-2"></i>
+                    🚀 Software Revolution (1960s-1980s)
+                </div>
+                <div class="content-list">
+                    <div class="content-item">
+                        <i class="fas fa-graduation-cap me-2"></i>
+                        1964: BASIC for beginners
+                    </div>
+                    <div class="content-item">
+                        <i class="fab fa-cuttlefish me-2"></i>
+                        1972: C language created
+                    </div>
+                    <div class="content-item">
+                        <i class="fas fa-desktop me-2"></i>
+                        1980s: Personal computers boom
+                    </div>
+                </div>
+            </div>
+
+            <!-- Internet Era -->
+            <div class="sidebar-item">
+                <div class="topic-title">
+                    <i class="fas fa-globe me-2"></i>
+                    🌐 Internet Era (1990s-2000s)
+                </div>
+                <div class="content-list">
+                    <div class="content-item">
+                        <i class="fab fa-python me-2"></i>
+                        1991: Python created
+                    </div>
+                    <div class="content-item">
+                        <i class="fab fa-java me-2"></i>
+                        1995: Java & JavaScript launch
+                    </div>
+                    <div class="content-item">
+                        <i class="fab fa-git-alt me-2"></i>
+                        2005: Git transforms development
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modern AI -->
+            <div class="sidebar-item">
+                <div class="topic-title">
+                    <i class="fas fa-robot me-2"></i>
+                    🤖 AI & Future (2010s-Today)
+                </div>
+                <div class="content-list">
+                    <div class="content-item">
+                        <i class="fab fa-github me-2"></i>
+                        2008: GitHub enables collaboration
+                    </div>
+                    <div class="content-item">
+                        <i class="fas fa-cloud me-2"></i>
+                        2010s: Cloud computing (AWS/Azure)
+                    </div>
+                    <div class="content-item">
+                        <i class="fas fa-brain me-2"></i>
+                        2020s: AI coding assistants emerge
+                    </div>
+                </div>
+            </div>
+
+            <!-- Key Takeaway -->
+            <div class="sidebar-footer mt-3 p-3 bg-light rounded">
+                <strong>Key Takeaway:</strong>
+                Coding evolved from math → mechanical → electronic → internet → AI.
+            </div>
+        </div>
+    </div> *@
+
+   @*  =========================================================================================================== *@
+
+
+    @* <div class="coding-history">
+        <div class="sidebar-inner">
+            <div class="sidebar-header">
+                <div class="category-title">
+                    <i class="fas fa-history me-2"></i>
+                    The Evolution of Coding
+                </div>
+            </div>
+
+            <div class="sidebar-content">
+                <!-- 1. Ancient Foundations -->
+                <div class="sidebar-item">
+                    <div class="topic-title">
+                        <i class="fas fa-hourglass-start me-2"></i>
+                        🌍 Ancient Foundations
+                    </div>
+                    <div class="content-list">
+                        <!-- Al-Khwarizmi -->
+                        <div class="content-item">
+                            <div class="expandable-section">
+                                <div class="expandable-header" data-bs-toggle="collapse" data-bs-target="#alKhwarizmiDetail">
+                                    <i class="fas fa-square-root-alt"></i>
+                                    <span class="history-main">9th Century: Al-Khwarizmi's Algorithms</span>
+                                    <span class="toggle-indicator">[+]</span>
+                                </div>
+                                <div id="alKhwarizmiDetail" class="expandable-detail collapse">
+                                    <div class="detail-content">
+                                        <p>Persian mathematician Muhammad ibn Musa al-Khwarizmi wrote <em>Kitab al-Jabr wa al-Muqabala</em>, establishing algebra as a mathematical discipline. His systematic approach to solving linear and quadratic equations laid the foundation for algorithmic thinking.</p>
+                                        <p class="mb-0"><strong>Legacy:</strong> The terms "algorithm" (from Algoritmi) and "algebra" (from al-Jabr) both derive from his work.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Ada Lovelace -->
+                        <div class="content-item">
+                            <div class="expandable-section">
+                                <div class="expandable-header" data-bs-toggle="collapse" data-bs-target="#lovelaceDetail">
+                                    <i class="fas fa-cogs"></i>
+                                    <span class="history-main">1843: Ada Lovelace - First Programmer</span>
+                                    <span class="toggle-indicator">[+]</span>
+                                </div>
+                                <div id="lovelaceDetail" class="expandable-detail collapse">
+                                    <div class="detail-content">
+                                        <p>While translating an article on Charles Babbage's Analytical Engine, Lovelace added extensive notes including an algorithm to compute Bernoulli numbers - the first published computer program.</p>
+                                        <p><strong>Key Insight:</strong> She recognized the machine's potential beyond calculation, envisioning it could compose music and create art if properly programmed.</p>
+                                        <p class="mb-0"><strong>Quote:</strong> "The Analytical Engine weaves algebraic patterns, just as the Jacquard loom weaves flowers and leaves."</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Hollerith -->
+                        <div class="content-item">
+                            <div class="expandable-section">
+                                <div class="expandable-header" data-bs-toggle="collapse" data-bs-target="#hollerithDetail">
+                                    <i class="fas fa-punch-card"></i>
+                                    <span class="history-main">1890: Hollerith's Punch Cards</span>
+                                    <span class="toggle-indicator">[+]</span>
+                                </div>
+                                <div id="hollerithDetail" class="expandable-detail collapse">
+                                    <div class="detail-content">
+                                        <p>Herman Hollerith developed electromechanical tabulators that read data from punched cards to automate the 1890 U.S. Census. His machine reduced processing time from 8 years (1880) to just 6 months.</p>
+                                        <p><strong>Technical Details:</strong> Each card stored 80 variables using hole patterns. A pin passing through a hole completed a circuit, incrementing counters.</p>
+                                        <p class="mb-0"><strong>Legacy:</strong> This technology led to the founding of IBM in 1911 and dominated data processing until the 1970s.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. Computer Age -->
+                <div class="sidebar-item">
+                    <div class="topic-title">
+                        <i class="fas fa-computer me-2"></i>
+                        💻 Computer Age (1930s-1950s)
+                    </div>
+                    <div class="content-list">
+                        <!-- ENIAC -->
+                        <div class="content-item">
+                            <div class="expandable-section">
+                                <div class="expandable-header" data-bs-toggle="collapse" data-bs-target="#eniacDetail">
+                                    <i class="fas fa-server"></i>
+                                    <span class="history-main">1940s: ENIAC Programmers</span>
+                                    <span class="toggle-indicator">[+]</span>
+                                </div>
+                                <div id="eniacDetail" class="expandable-detail collapse">
+                                    <div class="detail-content">
+                                        <p>The Electronic Numerical Integrator and Computer (ENIAC) was programmed by six women - Kay McNulty, Betty Jennings, Betty Snyder, Marlyn Wescoff, Fran Bilas, and Ruth Lichterman.</p>
+                                        <p><strong>Programming Method:</strong> They configured the 18,000-vacuum-tube computer by physically rewiring circuits and setting 3,000+ switches.</p>
+                                        <p class="mb-0"><strong>Legacy:</strong> Their work on ballistic calculations for WWII went unrecognized for decades, though they developed many modern programming concepts.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Assembly -->
+                        <div class="content-item">
+                            <div class="expandable-section">
+                                <div class="expandable-header" data-bs-toggle="collapse" data-bs-target="#assemblyDetail">
+                                    <i class="fas fa-microchip"></i>
+                                    <span class="history-main">1949: Assembly Language</span>
+                                    <span class="toggle-indicator">[+]</span>
+                                </div>
+                                <div id="assemblyDetail" class="expandable-detail collapse">
+                                    <div class="detail-content">
+                                        <p>Early computers required programming in binary machine code (e.g., <code>10110000 01100001</code>). Assembly language introduced mnemonics like:</p>
+                                        <pre>MOV AL, 61h  ; Instead of 10110000 01100001
+    ADD BL, CL   ; Instead of 00000010 11011001</pre>
+                                        <p><strong>Impact:</strong> Reduced errors and improved readability while maintaining direct hardware control.</p>
+                                        <p class="mb-0"><strong>Modern Use:</strong> Still used in device drivers, embedded systems, and performance-critical code.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- FORTRAN -->
+                        <div class="content-item">
+                            <div class="expandable-section">
+                                <div class="expandable-header" data-bs-toggle="collapse" data-bs-target="#fortranDetail">
+                                    <i class="fas fa-calculator"></i>
+                                    <span class="history-main">1957: FORTRAN Revolution</span>
+                                    <span class="toggle-indicator">[+]</span>
+                                </div>
+                                <div id="fortranDetail" class="expandable-detail collapse">
+                                    <div class="detail-content">
+                                        <p>FORTRAN (FORmula TRANslation) was the first high-level language, allowing scientists to write:</p>
+                                        <pre>X = (A + B) / C  <span style="color: #6c757d;">// Instead of manual register management</span></pre>
+                                        <p><strong>Breakthrough:</strong> The compiler converted this to efficient machine code, proving "automatic programming" wasn't inherently slow.</p>
+                                        <p class="mb-0"><strong>Legacy:</strong> Still used in scientific computing today (e.g., weather prediction, computational physics).</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Software Revolution -->
+                <div class="sidebar-item">
+                    <div class="topic-title">
+                        <i class="fas fa-laptop-code me-2"></i>
+                        🚀 Software Revolution (1960s-1980s)
+                    </div>
+                    <div class="content-list">
+                        <!-- BASIC -->
+                        <div class="content-item">
+                            <div class="expandable-section">
+                                <div class="expandable-header" data-bs-toggle="collapse" data-bs-target="#basicDetail">
+                                    <i class="fas fa-graduation-cap"></i>
+                                    <span class="history-main">1964: BASIC for Beginners</span>
+                                    <span class="toggle-indicator">[+]</span>
+                                </div>
+                                <div id="basicDetail" class="expandable-detail collapse">
+                                    <div class="detail-content">
+                                        <p>Designed at Dartmouth College to make programming accessible to non-scientists:</p>
+                                        <pre>10 PRINT "HELLO WORLD"
+    20 INPUT "YOUR NAME"; N$
+    30 PRINT "WELCOME, "; N$
+    40 GOTO 10</pre>
+                                        <p><strong>Impact:</strong> Became standard on early home computers (Apple II, Commodore 64).</p>
+                                        <p class="mb-0"><strong>Controversy:</strong> Critics blamed its simplicity for creating "spaghetti code".</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- C -->
+                        <div class="content-item">
+                            <div class="expandable-section">
+                                <div class="expandable-header" data-bs-toggle="collapse" data-bs-target="#cDetail">
+                                    <i class="fab fa-cuttlefish"></i>
+                                    <span class="history-main">1972: C Language</span>
+                                    <span class="toggle-indicator">[+]</span>
+                                </div>
+                                <div id="cDetail" class="expandable-detail collapse">
+                                    <div class="detail-content">
+                                        <p>Dennis Ritchie at Bell Labs created C to develop Unix, combining:</p>
+                                        <ul>
+                                            <li>High-level structures (functions, loops)</li>
+                                            <li>Low-level memory access (pointers)</li>
+                                        </ul>
+                                        <p><strong>Example Legacy:</strong> The Linux kernel contains ~15 million lines of C code.</p>
+                                        <p class="mb-0"><strong>Influence:</strong> Direct ancestor of C++, Java, C#, and JavaScript syntax.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Personal Computers -->
+                        <div class="content-item">
+                            <div class="expandable-section">
+                                <div class="expandable-header" data-bs-toggle="collapse" data-bs-target="#pcDetail">
+                                    <i class="fas fa-desktop"></i>
+                                    <span class="history-main">1980s: PC Revolution</span>
+                                    <span class="toggle-indicator">[+]</span>
+                                </div>
+                                <div id="pcDetail" class="expandable-detail collapse">
+                                    <div class="detail-content">
+                                        <p>Key milestones:</p>
+                                        <table class="table table-sm">
+                                            <tr><th>1981</th><td>IBM PC (MS-DOS)</td><td>16KB RAM, $1,565</td></tr>
+                                            <tr><th>1984</th><td>Macintosh</td><td>First mass-market GUI</td></tr>
+                                            <tr><th>1985</th><td>Windows 1.0</td><td>GUI shell for DOS</td></tr>
+                                        </table>
+                                        <p class="mb-0"><strong>Dev Tools:</strong> Turbo Pascal (1983) introduced modern IDE features like integrated debugger.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. Internet Era -->
+                <div class="sidebar-item">
+                    <div class="topic-title">
+                        <i class="fas fa-globe me-2"></i>
+                        🌐 Internet Era (1990s-2000s)
+                    </div>
+                    <div class="content-list">
+                        <!-- Python -->
+                        <div class="content-item">
+                            <div class="expandable-section">
+                                <div class="expandable-header" data-bs-toggle="collapse" data-bs-target="#pythonDetail">
+                                    <i class="fab fa-python"></i>
+                                    <span class="history-main">1991: Python Created</span>
+                                    <span class="toggle-indicator">[+]</span>
+                                </div>
+                                <div id="pythonDetail" class="expandable-detail collapse">
+                                    <div class="detail-content">
+                                        <p>Guido van Rossum designed Python with:</p>
+                                        <ul>
+                                            <li>Mandatory indentation for readability</li>
+                                            <li>Dynamic typing and garbage collection</li>
+                                            <li>"Batteries included" standard library</li>
+                                        </ul>
+                                        <p><strong>Philosophy:</strong> "There should be one—and preferably only one—obvious way to do it."</p>
+                                        <p class="mb-0"><strong>Modern Use:</strong> Dominates AI/ML (TensorFlow, PyTorch), web (Django), and scripting.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Java/JS -->
+                        <div class="content-item">
+                            <div class="expandable-section">
+                                <div class="expandable-header" data-bs-toggle="collapse" data-bs-target="#javaDetail">
+                                    <i class="fab fa-java"></i>
+                                    <span class="history-main">1995: Java & JavaScript</span>
+                                    <span class="toggle-indicator">[+]</span>
+                                </div>
+                                <div id="javaDetail" class="expandable-detail collapse">
+                                    <div class="detail-content">
+                                        <p><strong>Java (Sun Microsystems):</strong></p>
+                                        <ul>
+                                            <li>"Write Once, Run Anywhere" with JVM</li>
+                                            <li>Originally for interactive TV, then web applets</li>
+                                        </ul>
+                                        <p><strong>JavaScript (Netscape):</strong></p>
+                                        <ul>
+                                            <li>Created in 10 days by Brendan Eich</li>
+                                            <li>Enabled dynamic web pages (DHTML)</li>
+                                        </ul>
+                                        <p class="mb-0"><strong>Fun Fact:</strong> Their similar names cause endless confusion despite being completely different languages.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Git -->
+                        <div class="content-item">
+                            <div class="expandable-section">
+                                <div class="expandable-header" data-bs-toggle="collapse" data-bs-target="#gitDetail">
+                                    <i class="fab fa-git-alt"></i>
+                                    <span class="history-main">2005: Git Version Control</span>
+                                    <span class="toggle-indicator">[+]</span>
+                                </div>
+                                <div id="gitDetail" class="expandable-detail collapse">
+                                    <div class="detail-content">
+                                        <p>Linus Torvalds created Git after the Linux kernel team lost access to BitKeeper:</p>
+                                        <ul>
+                                            <li>Distributed version control (every clone is a full repository)</li>
+                                            <li>Cryptographic integrity (SHA-1 hashes)</li>
+                                            <li>Non-linear development (easy branching/merging)</li>
+                                        </ul>
+                                        <p class="mb-0"><strong>Impact:</strong> GitHub (2008) built on Git to host 100M+ repositories today.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5. AI Era -->
+                <div class="sidebar-item">
+                    <div class="topic-title">
+                        <i class="fas fa-robot me-2"></i>
+                        🤖 AI & Future (2010s-Today)
+                    </div>
+                    <div class="content-list">
+                        <!-- GitHub -->
+                        <div class="content-item">
+                            <div class="expandable-section">
+                                <div class="expandable-header" data-bs-toggle="collapse" data-bs-target="#githubDetail">
+                                    <i class="fab fa-github"></i>
+                                    <span class="history-main">2008: GitHub Launched</span>
+                                    <span class="toggle-indicator">[+]</span>
+                                </div>
+                                <div id="githubDetail" class="expandable-detail collapse">
+                                    <div class="detail-content">
+                                        <p>Revolutionized open-source collaboration with:</p>
+                                        <ul>
+                                            <li>Pull request workflow</li>
+                                            <li>Issue tracking</li>
+                                            <li>CI/CD integration</li>
+                                        </ul>
+                                        <p><strong>Growth:</strong> From 100K repos (2010) to 100M+ today.</p>
+                                        <p class="mb-0"><strong>Acquisition:</strong> Microsoft bought GitHub for $7.5B in 2018.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Cloud -->
+                        <div class="content-item">
+                            <div class="expandable-section">
+                                <div class="expandable-header" data-bs-toggle="collapse" data-bs-target="#cloudDetail">
+                                    <i class="fas fa-cloud"></i>
+                                    <span class="history-main">2010s: Cloud Computing</span>
+                                    <span class="toggle-indicator">[+]</span>
+                                </div>
+                                <div id="cloudDetail" class="expandable-detail collapse">
+                                    <div class="detail-content">
+                                        <p>Major platforms:</p>
+                                        <table class="table table-sm">
+                                            <tr><th>AWS (2006)</th><td>Pioneered IaaS with EC2/S3</td></tr>
+                                            <tr><th>Azure (2010)</th><td>Microsoft's cloud platform</td></tr>
+                                            <tr><th>GCP (2011)</th><td>Google's infrastructure</td></tr>
+                                        </table>
+                                        <p><strong>Paradigm Shift:</strong> From physical servers to:</p>
+                                        <ul>
+                                            <li>Serverless functions (AWS Lambda)</li>
+                                            <li>Container orchestration (Kubernetes)</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- AI Assistants -->
+                        <div class="content-item">
+                            <div class="expandable-section">
+                                <div class="expandable-header" data-bs-toggle="collapse" data-bs-target="#aiDetail">
+                                    <i class="fas fa-brain"></i>
+                                    <span class="history-main">2020s: AI Coding Assistants</span>
+                                    <span class="toggle-indicator">[+]</span>
+                                </div>
+                                <div id="aiDetail" class="expandable-detail collapse">
+                                    <div class="detail-content">
+                                        <p>Transformative tools:</p>
+                                        <ul>
+                                            <li><strong>GitHub Copilot (2021):</strong> AI pair programmer trained on public code</li>
+                                            <li><strong>ChatGPT (2022):</strong> Can explain, debug, and generate code</li>
+                                        </ul>
+                                        <p><strong>Capabilities:</strong></p>
+                                        <pre># AI-generated Python example
+    def calculate_fibonacci(n):
+        a, b = 0, 1
+        for _ in range(n):
+            yield a
+            a, b = b, a + b</pre>
+                                        <p class="mb-0"><strong>Controversy:</strong> Copyright and quality concerns about AI-generated code.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Key Takeaway -->
+                <div class="sidebar-footer">
+                    <strong>Key Takeaway:</strong>
+                    <ol class="mb-0">
+                        <li><strong>9th-19th C:</strong> Mathematical foundations</li>
+                        <li><strong>1900-1940:</strong> Mechanical computation</li>
+                        <li><strong>1940-1960:</strong> Electronic programming</li>
+                        <li><strong>1960-2000:</strong> High-level languages</li>
+                        <li><strong>2000-Present:</strong> Networked collaboration & AI</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div> *@
+}
+
+@functions {
+    string GetCategoryIcon(string categoryName)
+    {
+        if (string.IsNullOrWhiteSpace(categoryName))
+            return "📁"; // Default icon
+
+        var name = categoryName.ToLowerInvariant();
+
+        // Programming Languages
+        if (name.Contains("c#")) return "💻";
+        if (name.Contains("javascript")) return "📜";
+        if (name.Contains("typescript")) return "💠";
+        if (name.Contains("python")) return "🐍";
+        if (name.Contains("java")) return "☕";
+
+        // .NET & Backend
+        if (name.Contains("asp.net core identity")) return "🛡️";
+        if (name.Contains("asp.net core web api")) return "🔗";
+        if (name.Contains("asp.net core mvc")) return "⚙️";
+        if (name.Contains("asp.net mvc")) return "📊";
+        if (name.Contains("asp.net core")) return "🌐";
+        if (name.Contains("asp.net")) return "🧭";
+        if (name.Contains(".net core")) return "🖥️";
+        if (name.Contains(".net")) return "🧮";
+        if (name.Contains("web api")) return "🔌";
+        if (name.Contains("blazor")) return "⚡";
+        if (name.Contains("entity framework")) return "🗃️";
+        if (name.Contains("linq")) return "➰";
+        if (name.Contains("ado.net core")) return "🔗";
+        if (name.Contains("ado.net")) return "🔌";
+
+        // Databases
+        if (name.Contains("sql server")) return "🗄️";
+        if (name.Contains("mysql")) return "🐬";
+        if (name.Contains("oracle")) return "🔴";
+        if (name.Contains("mongodb")) return "🍃";
+        if (name.Contains("postgresql")) return "🐘";
+        if (name.Contains("redis")) return "🧠";
+
+        // Frontend Frameworks
+        if (name.Contains("react")) return "⚛️";
+        if (name.Contains("angular")) return "🅰️";
+        if (name.Contains("vue")) return "🟩";
+        if (name.Contains("svelte")) return "🌀";
+        if (name.Contains("jquery")) return "🔧";
+
+        // DevOps / Cloud
+        if (name.Contains("docker")) return "🐳";
+        if (name.Contains("kubernetes")) return "⛵";
+        if (name.Contains("azure")) return "☁️";
+        if (name.Contains("aws")) return "🌩️";
+        if (name.Contains("terraform")) return "🏗️";
+        if (name.Contains("ci/cd")) return "🔄";
+
+        return "📁"; // Default fallback
+    }
+}
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize all collapse elements
+        const collapseElements = document.querySelectorAll('.collapse');
+
+        // Update toggle indicators
+        document.querySelectorAll('.expandable-header').forEach(header => {
+            header.addEventListener('click', function() {
+                const indicator = this.querySelector('.toggle-indicator');
+                const target = this.getAttribute('data-bs-target');
+                const targetElement = document.querySelector(target);
+
+                // Wait for Bootstrap's collapse animation to complete
+                targetElement.addEventListener('shown.bs.collapse', function() {
+                    indicator.textContent = '[-]';
+                });
+
+                targetElement.addEventListener('hidden.bs.collapse', function() {
+                    indicator.textContent = '[+]';
+                });
+            });
+        });
+    });
+</script>
+<style>
+    .emoji-icon {
+        font-size: 1.3rem;
+        margin-right: 0.5rem;
+        display: inline-block;
+    }
+</style>
+@* <style>
+    .coding-history {
+        --icon-width: 24px;
+        font-size: 0.9rem;
+    }
+
+    .sidebar-inner {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        padding: 15px;
+    }
+
+    .sidebar-header {
+        padding-bottom: 10px;
+        border-bottom: 1px solid #eee;
+        margin-bottom: 15px;
+    }
+
+    .category-title {
+        font-weight: 600;
+        font-size: 1.1rem;
+    }
+
+    .topic-title {
+        font-weight: 500;
+        padding: 8px 0;
+        border-bottom: 1px dashed #ddd;
+        margin-bottom: 10px;
+    }
+
+    .content-list {
+        margin-left: 5px;
+    }
+
+    .expandable-section {
+        margin-bottom: 12px;
+    }
+
+    .expandable-header {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        padding: 6px 8px;
+        border-radius: 4px;
+        transition: all 0.2s;
+    }
+
+        .expandable-header:hover {
+            background-color: #f8f9fa;
+        }
+
+    .history-main {
+        flex-grow: 1;
+        margin-left: 8px;
+    }
+
+    .toggle-indicator {
+        color: #0d6efd;
+        font-size: 0.8em;
+        margin-left: 8px;
+        user-select: none;
+        min-width: 30px;
+        text-align: right;
+    }
+
+    .expandable-detail {
+        margin-left: calc(var(--icon-width) + 8px);
+    }
+
+    .detail-content {
+        padding: 12px;
+        background: #f8f9fa;
+        border-radius: 6px;
+        border-left: 3px solid #dee2e6;
+        margin-top: 5px;
+    }
+
+        .detail-content p {
+            margin-bottom: 8px;
+        }
+
+            .detail-content p:last-child {
+                margin-bottom: 0;
+            }
+
+    pre {
+        background: #2d2d2d;
+        color: #f8f9fa;
+        padding: 10px;
+        border-radius: 4px;
+        font-size: 0.85em;
+        margin: 10px 0;
+        overflow-x: auto;
+    }
+
+    .table-sm {
+        font-size: 0.85em;
+    }
+
+    .sidebar-footer {
+        background-color: #f8f9fa;
+        border-radius: 6px;
+        padding: 12px;
+        margin-top: 15px;
+        font-size: 0.85rem;
+    }
+</style> *@

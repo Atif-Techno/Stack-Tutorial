@@ -1,0 +1,41 @@
+﻿@model StackTutorial.Models.Category
+@{
+    ViewData["Title"] = "Delete Category";
+    Layout = "_LayoutAdmin";
+}
+
+<div class="container">
+    <h1>Delete Category</h1>
+
+    <div class="alert alert-danger">
+        <h4>Are you sure you want to delete this category?</h4>
+        <p class="mb-0">This action cannot be undone and will delete all associated topics and content.</p>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">@Model.Name</h5>
+            <p class="card-text">@Model.Description</p>
+            <dl class="row mt-3">
+                <dt class="col-sm-3">Created Date</dt>
+                <dd class="col-sm-9">@Model.CreatedDate.ToString("MMMM dd, yyyy")</dd>
+
+                @if (Model.UpdatedDate.HasValue)
+                {
+                    <dt class="col-sm-3">Last Updated</dt>
+                    <dd class="col-sm-9">@Model.UpdatedDate.Value.ToString("MMMM dd, yyyy")</dd>
+                }
+            </dl>
+        </div>
+    </div>
+
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <button type="submit" class="btn btn-danger me-2">
+            <i class="fas fa-trash"></i> Confirm Delete
+        </button>
+        <a asp-action="Index" class="btn btn-secondary">
+            <i class="fas fa-times"></i> Cancel
+        </a>
+    </form>
+</div>

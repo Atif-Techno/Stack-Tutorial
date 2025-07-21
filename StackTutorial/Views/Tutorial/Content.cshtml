@@ -1,0 +1,87 @@
+﻿@model StackTutorial.Models.ContentModel
+@{
+    ViewData["Title"] = Model.Title;
+}
+@* <div class="content-header-container">
+    <div class="header-inner">
+        @if (Model.Topic?.Category != null)
+        {
+            <h1 class="category-title">@Model.Topic.Category.Name</h1>
+        }
+    </div>
+</div>
+ *@
+
+
+<div class="content-container">
+    <article class="content-article">
+        <header class="content-header mb-4">
+            <h1>@Model.Title</h1>
+        </header>
+
+        <div class="content-body">
+            @Html.Raw(Model.Body)
+        </div>
+
+        <div class="content-navigation mt-5 pt-3 border-top">
+            <div class="d-flex justify-content-between">
+                @if (ViewBag.PreviousContent != null)
+                {
+                    <a asp-action="Content" asp-route-id="@ViewBag.PreviousContent.ContentID"
+                       class="btn btn-outline-primary">
+                        ← Previous
+                    </a>
+                }
+                @if (ViewBag.NextContent != null)
+                {
+                    <a asp-action="Content" asp-route-id="@ViewBag.NextContent.ContentID"
+                       class="btn btn-primary ms-auto">
+                        Next →
+                    </a>
+                }
+            </div>
+        </div>
+    </article>
+</div>
+
+<style>
+    .content-header-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 50px;
+        background-color: var(--white);
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        border: 2px solid var(--primary-light);
+        margin: 2rem auto;
+        padding: 1rem;
+        max-width: 1200px;
+        position: relative;
+    }
+
+        .content-header-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 2px;
+            width: 100%;
+            background: var(--button-gradient); /* Optional gradient top border */
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+        }
+
+    .header-inner {
+        text-align: center;
+    }
+
+    .category-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--primary-dark);
+        margin: 0;
+        /* text-transform: uppercase; */
+        letter-spacing: 1px;
+    }
+    
+</style>

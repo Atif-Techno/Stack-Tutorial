@@ -1,0 +1,66 @@
+﻿@using Microsoft.AspNetCore.Mvc.Rendering
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - StackTutorial</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <!-- Font Awesome 6 Free CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-yDqz0Qe0o/jnKKG8y4XYY3HREk2AxJH6Xy3hYTxUeYlTpjvX8UPq9zvUp5CwrZxkDtvk7g1R3xg8jBWmb4eoGA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Prism Core & C# Language -->
+    <link href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism.css" rel="stylesheet" />
+
+
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="icon" href="~/favicon.ico" type="image/x-icon" />
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body>
+    <!-- Header Partial -->
+    <header class="app-header">
+        @await Html.PartialAsync("_Header")
+    </header>
+
+    <div class="app-container">
+        <!-- Sidebar Partial -->
+        <aside class="app-sidebar">
+            @await Html.PartialAsync("_SideMenu")
+        </aside>
+
+        <!-- Main Content -->
+        <main class="app-main">
+            <div class="container-fluid py-3">
+                @RenderBody()
+            </div>
+        </main>
+    </div>
+
+    <!-- Footer Partial -->
+    <footer class="app-footer">
+        @await Html.PartialAsync("_Footer")
+    </footer>
+    <!-- Search Loader Overlay -->
+    <div class="search-loader">
+        <div class="loader-spinner">
+            <div></div><div></div><div></div>
+            <div></div><div></div><div></div>
+            <div></div><div></div><div></div>
+        </div>
+        <div class="loader-text">Searching...</div>
+    </div>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-csharp.min.js"></script>
+    <script>
+        // Initial highlight for all code blocks on page load
+        document.addEventListener('DOMContentLoaded', (event) => {
+            Prism.highlightAll();
+        });
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

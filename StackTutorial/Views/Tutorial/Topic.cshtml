@@ -1,0 +1,22 @@
+﻿@model IEnumerable<StackTutorial.Models.ContentModel>
+@{
+    ViewData["Title"] = ViewBag.Topic.Title;
+}
+
+<div class="container">
+    <div class="topic-header text-center mb-5">
+        <h1>@ViewBag.Topic.Title</h1>
+        <p class="lead text-muted">@ViewBag.Topic.Description</p>
+    </div>
+
+    <div class="list-group">
+        @foreach (var content in Model.OrderBy(c => c.Order))
+        {
+            <a asp-action="Content" asp-route-id="@content.ContentID"
+               class="list-group-item list-group-item-action">
+                <h5>@content.Title</h5>
+                <small class="text-muted">@content.MetaDescription</small>
+            </a>
+        }
+    </div>
+</div>
