@@ -130,8 +130,7 @@ The platform follows a 3-tier hierarchical model to logically organize tutorials
 + │       └── 📜 Content.cshtml
 + │
 + ├── 📜 appsettings.json
-+ ├── 📜 Program.cs
-+ └── 📜 Startup.cs
++ └──  📜 Program.cs
 
 ## **📸 Screenshots**  
 **Here are a few screenshots showcasing the main features and layout of the Stack Tutorial platform:**
