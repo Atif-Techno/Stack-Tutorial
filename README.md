@@ -24,6 +24,19 @@ The platform follows a 3-tier hierarchical model to logically organize tutorials
 ➡️ Contents – e.g., Lessons, Examples, Code Snippets
 
 ---
+🔧 UmbrellaCorp – Common Utility Functions
+The Umbrella.cs file, located inside the Infrastructure/Repositories folder of the UmbrellaCorp project, acts as a centralized helper class that provides a wide range of reusable utility functions. These include tasks like:
+
+##🛠️ Key Utilities Included:
+
+- 🔑 GenerateNewGuid() – Creates a new unique identifier using Guid.NewGuid()
+- 📅 FormatDate(DateTime) – Converts date values to consistent, human-readable formats
+- 🔒 Encrypt(string plainText) – Encrypts sensitive data using secure algorithms
+- 🔓 Decrypt(string encryptedText) – Decrypts data back to its original form
+- 🧹 SanitizeInput() – Removes unwanted characters to protect against XSS or SQL injection (optional)
+- 🧮 Utility Math / Conversion Helpers – Includes basic converters and formatting methods as needed
+
+---
 
 ##✨ Key Capabilities
 
@@ -61,6 +74,7 @@ The platform follows a 3-tier hierarchical model to logically organize tutorials
 | **IDE**       | Visual Studio 2022+                                                         |
 | **Version Control** | `Git & GitHub`                                                        |
 | **Architecture** | MVC Pattern, Repository & Services Layer                                |
+
 
 ---
 
@@ -131,6 +145,11 @@ The platform follows a 3-tier hierarchical model to logically organize tutorials
 + │
 + ├── 📜 appsettings.json
 + └──  📜 Program.cs
++ UmbrellaCorp
++ ├── 📁 Infrastructure
++ │   └── 📁 Repositories
++ │       └── 📜 UmbrellaLib.cs
++ └── 📜 Program.cs
 
 ## **📸 Screenshots**  
 **Here are a few screenshots showcasing the main features and layout of the Stack Tutorial platform:**
