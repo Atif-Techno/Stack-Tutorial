@@ -30,7 +30,6 @@ The platform follows a 3-tier hierarchical model to logically organize tutorials
 - ✅ Clean 3-Tier Tutorial Structure: Category → Topic → Content
 - 🛠️ Built with ASP.NET Core 8 MVC and Entity Framework Core (Code First)
 - 📁 Modular architecture using Repository and Services Layer
-- 🧠 Developer-friendly and highly extensible
 - 🔍 Future-ready for features like search, authentication, and markdown or WYSIWYG editors
 - 📄 Admin panel to manage tutorials, topics, and content dynamically
 - 🌐 Responsive design with Razor-based views and static asset support
@@ -39,9 +38,7 @@ The platform follows a 3-tier hierarchical model to logically organize tutorials
 ##🧑‍💻 Ideal For
 
 - 🔍 Educators who want to manage and publish course material
-- 🧠 Developers documenting code and tutorials in a reusable system
 - 📄 Learners looking to explore well-structured programming content
-- 🧑‍💻 Teams building internal documentation or training systems
 ---
 ## 🎯 Project Objectives
 
